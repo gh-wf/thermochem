@@ -10,6 +10,7 @@ library.
 from __future__ import division
 from __future__ import print_function
 import os
+import re
 try:
     from xml.etree.ElementTree import parse
 except ImportError:
@@ -428,11 +429,12 @@ class Elementdb(object):
         Tmin_ = np.zeros(7)
         _Tmax = np.zeros(7)
         comp = []
-
+        formula = re.sub("\s\s+", " ", formula) # convert multiple spaces to single space
+        
         def element_matches(element, formula):
             """Check if element matches a formula"""
             phase_element = element.tag == "phase"
-            return phase_element and element.find("formula").text == formula
+            return phase_element and re.sub("\s\s+", " ", element.find("formula").text) == formula
 
         for specie in self.db:
             for element in specie:
